@@ -2,26 +2,35 @@ using UnityEngine;
 using QFramework;
 using UnityEditor.SearchService;
 
+[System.Serializable]
+public class LevelEXPPair
+{
+    public int Level;
+    public int EXPValue;
+}
+
 // Model对象定义
 public class PlayerDataModel: AbstractModel
 {
-    public int Score;
-    public int Hp;
-    public int maxHp;
-    public int Level;
-    public int EXPValue;
-    public int maxEXP;
-    public int maxLevel;
+    public int Score; // 当前分数
+    public int CurrentHp; // 当前生命值
+    public int MaxHp; // 最大生命值
+    public int CurrentLevel; // 当前等级
+    public int MaxLevel; // 最大等级
+    public int CurrentEXPValue; // 当前经验值
+    public int MaxEXP; // 最大经验值
 
     protected override void OnInit()
     {
         Score = 0;
-        Hp = 100;
-        Level = 1;
-        EXPValue = 0;
-        maxHp = 100;
-        maxEXP = 100;
-        maxLevel = 10;
+        MaxHp = 6;
+        MaxLevel = 3;
+        MaxEXP = 30;
+
+        CurrentHp = MaxHp;
+        CurrentLevel = 1;
+        CurrentEXPValue = 0;
+
     }
 }
 
@@ -39,7 +48,7 @@ public class PlayerDataChangeEvent
 {
 }
 
-// Command定义
+// 分数改变命令
 public class ChangeScoreCommand : AbstractCommand
 {
     private int changedValue_;
@@ -54,6 +63,7 @@ public class ChangeScoreCommand : AbstractCommand
     }
 }
 
+// 生命值改变指令
 public class ChangeHpCommand : AbstractCommand
 {
     private int changedHp_;
@@ -64,12 +74,12 @@ public class ChangeHpCommand : AbstractCommand
     protected override void OnExecute()
     {
         PlayerDataModel playerDataModel = this.GetModel<PlayerDataModel>();
-        Debug.Log("changedHP:" + changedHp_);
-        playerDataModel.Hp = Mathf.Clamp(playerDataModel.Hp + changedHp_, 0, playerDataModel.maxHp);
+        playerDataModel.CurrentHp = Mathf.Clamp(playerDataModel.CurrentHp + changedHp_, 0, playerDataModel.MaxHp);
         this.SendEvent<PlayerDataChangeEvent>();
     }
 }
 
+// 经验值改变命令
 public class ChangeEXPValueCommand : AbstractCommand
 {
     private int changedEXPValue_;
@@ -80,18 +90,19 @@ public class ChangeEXPValueCommand : AbstractCommand
     protected override void OnExecute()
     {
         PlayerDataModel playerDataModel = this.GetModel<PlayerDataModel>();
-        playerDataModel.EXPValue += changedEXPValue_;
-        if(playerDataModel.Level == playerDataModel.maxLevel)
+        playerDataModel.CurrentEXPValue += changedEXPValue_;
+
+
+        if(playerDataModel.CurrentEXPValue >= playerDataModel.MaxEXP)
         {
-            playerDataModel.EXPValue = playerDataModel.maxEXP;
-            this.SendEvent<PlayerDataChangeEvent>();
-            return;
-        }
-        if(playerDataModel.EXPValue >= playerDataModel.maxEXP)
-        {
-            playerDataModel.EXPValue -= playerDataModel.maxEXP;
-            playerDataModel.Level++;
-            playerDataModel.maxEXP = playerDataModel.Level * 100;
+            // 重新设置当前经验值
+            playerDataModel.CurrentEXPValue = 0;
+            if(playerDataModel.CurrentLevel < playerDataModel.MaxLevel)
+            {
+                playerDataModel.CurrentLevel++;
+            }
+            // 升级后重新设置最大经验值
+            playerDataModel.MaxEXP = PlayerController.Instance.levelEXPPairs[playerDataModel.CurrentLevel].EXPValue;
         }
         this.SendEvent<PlayerDataChangeEvent>();
     }

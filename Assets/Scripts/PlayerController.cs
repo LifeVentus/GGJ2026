@@ -17,6 +17,9 @@ public class PlayerController : MonoBehaviour, IController
         }
     }
 
+    [Header("属性设置")]
+    public List<LevelEXPPair> levelEXPPairs = new List<LevelEXPPair>();
+
     [Header("移动参数")]
     [SerializeField] private float moveSpeed = 5.0f;
     // [SerializeField] private float volume = 10f;
@@ -57,6 +60,52 @@ public class PlayerController : MonoBehaviour, IController
     {
         MoveCharacter();
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.CompareTag("Entity"))
+        {
+            BaseEntity entity = collision.gameObject.GetComponent<BaseEntity>();
+            switch (entity.entityType)
+            {
+                case EntityType.small:
+                    entity.Die();
+                    break;
+                case EntityType.medium:
+                    if(playerDateModel.CurrentLevel < 2)
+                    {
+                        Die();
+                    }
+                    else
+                    {
+                        entity.Die();
+                    }
+                    break;
+                case EntityType.big:
+                    if(playerDateModel.CurrentLevel < 3)
+                    {
+                        Die();
+                    }
+                    else
+                    {
+                        entity.Die();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public void GetHurt()
+    {
+        this.SendCommand(new ChangeHpCommand(-1));
+        if(playerDateModel.CurrentHp == 0)
+        {
+            Die();
+        }
+    }
+
     /// <summary>
     /// 获取移动输入
     /// </summary>

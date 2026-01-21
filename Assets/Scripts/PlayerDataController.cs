@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using QFramework;
 using TMPro;
 using Unity.VisualScripting;
@@ -16,7 +17,6 @@ public class PlayerDataController : MonoBehaviour, IController
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI expText;
-
     // Model获取
     [SerializeField] private PlayerDataModel playerDateModel;
 
@@ -39,19 +39,15 @@ public class PlayerDataController : MonoBehaviour, IController
     void UpdateView()
     {
         scoreText.text = playerDateModel.Score.ToString();
-        Debug.Log("Score:" + playerDateModel.Score);
 
-        hpSlider.value = playerDateModel.Hp;
-        hpText.text = playerDateModel.Hp.ToString();
-        Debug.Log("hpValue:" + playerDateModel.Hp);
+        hpSlider.value = playerDateModel.CurrentHp;
+        hpText.text = playerDateModel.CurrentHp.ToString();
 
-        expSlider.maxValue = playerDateModel.maxEXP;
-        expSlider.value = playerDateModel.EXPValue;
-        expText.text = playerDateModel.EXPValue.ToString();
-        Debug.Log("maxExp:" + playerDateModel.maxEXP);
-        Debug.Log("EXPValue:" + playerDateModel.EXPValue);
+        expSlider.maxValue = playerDateModel.MaxEXP;
+        expSlider.value = playerDateModel.CurrentEXPValue;
+        expText.text = playerDateModel.CurrentEXPValue.ToString();
 
-        levelText.text = playerDateModel.Level.ToString();
+        levelText.text = playerDateModel.CurrentLevel.ToString();
     }
 
     private void Oestroy()
