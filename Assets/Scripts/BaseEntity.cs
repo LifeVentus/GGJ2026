@@ -23,6 +23,7 @@ public abstract class BaseEntity : MonoBehaviour, IController
     [SerializeField] protected float minSize;
     [SerializeField] protected float maxSize;
     public EntityStates entityState;
+    [HideInInspector] public GameObject prefab;
 
     [Header("随机移动设置")]
     [SerializeField] protected float moveSpeed; // 移动速度
@@ -46,6 +47,17 @@ public abstract class BaseEntity : MonoBehaviour, IController
 
     protected virtual void Start()
     {
+        Init();
+    }
+    protected virtual void Update()
+    {
+        RandomMove();
+        distanceWithPlayer = Vector2.Distance(player.transform.position, transform.position);
+        DestroyOutOfDistance();
+    }
+
+    public virtual void Init()
+    {
         player = PlayerController.Instance;
         playerDataModel = this.GetModel<PlayerDataModel>();
         transform.localScale *= Random.Range(minSize, maxSize);
@@ -53,10 +65,17 @@ public abstract class BaseEntity : MonoBehaviour, IController
         SetNewRandomMoveTarget();
         currentSpeed = moveSpeed;
     }
-    protected virtual void Update()
+
+    public virtual void Recycle()
     {
-        RandomMove();
-        distanceWithPlayer = Vector2.Distance(player.transform.position, transform.position);
+        // 重置状态
+        entityState = EntityStates.normal;
+        currentSpeed = moveSpeed;
+        isPlayerdetected = false;
+        timeCounter = moveCoolTime;
+    
+        // 回收至对象池
+        EntityManager.Instance.Return(this);
     }
     /// <summary>
     /// Entity随机移动逻辑
@@ -82,13 +101,13 @@ public abstract class BaseEntity : MonoBehaviour, IController
         moveTargetPosition = (Vector2)transform.position + new Vector2(randomX, randomY);
     }
     /// <summary>
-    /// 超出一定距离后删除实体
+    /// 超出一定距离后回收实体
     /// </summary>
     protected virtual void DestroyOutOfDistance()
     {    
         if(distanceWithPlayer >= distroyDistance)
         {
-            Destroy(gameObject);
+            Recycle();
         }
     }
     /// <summary>

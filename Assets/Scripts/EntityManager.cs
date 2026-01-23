@@ -6,43 +6,117 @@ using UnityEngine;
 
 public class EntityManager : MonoBehaviour
 {
-    [Header("生成设置")]
-    [SerializeField] private GameObject entityPrefab;
-    [SerializeField] private float generateRadiusMax = 30f;
-    [SerializeField] private float generateRadiusMin = 10f;
-    [SerializeField] private int entityAmount = 10;
-    [SerializeField] private float coolTime = 1f;
+    private static EntityManager instance;
+    public static EntityManager Instance
+    {
+        get
+        {
+            if(instance == null) return null;
+            return instance;
+        }
+    }
+    
+    private Dictionary<string, IObjectPool> pools = new Dictionary<string, IObjectPool>();
+
+    [Header("参数设置")]
+    [SerializeField] private List<BaseEntity> entityList;
+    [Range(0, 100)]
+    [SerializeField] private List<float> entityRatio;
+    [SerializeField] private int entityMaxAmount;
+    [SerializeField] private float generateMinRadius;
+    [SerializeField] private float generateMaxRadius;
+
     private float coolTimeCounter;
     private PlayerController player;
+    void Awake()
+    {
+        if(instance != null && instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+        // 初始化对象池
+        for(int i = 0; i < entityList.Count; i++)
+        {
+            int entityCount = (int)(entityMaxAmount * (entityRatio[i] / 100));
+            CreatePool(entityList[i], entityCount);
+        }
+    }
     void Start()
     {
         player = PlayerController.Instance;
-        coolTimeCounter = coolTime;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        CheckEntity();
-    }
-    private void CheckEntity()
-    {
-        int entityCount = player.DetectCheck(entityPrefab.layer, generateRadiusMax);
-        if(entityCount < entityAmount && coolTimeCounter <= 0)
-        {
-            GenerateEntity();
-            coolTimeCounter = coolTime;
-        }
-        coolTimeCounter -= Time.deltaTime;
-
+        GenerateEntity();
     }
     private void GenerateEntity()
     {
-        float randomX = Random.Range(generateRadiusMin, generateRadiusMax);
-        float randomY = Random.Range(generateRadiusMin, generateRadiusMax);
+        Vector2 playerPosition = player.transform.position;
+        int sign = Random.Range(0, 2) * 2 - 1;
+        float randomX = playerPosition.x + sign * Random.Range(generateMinRadius, generateMaxRadius);
+        sign = Random.Range(0, 2) * 2 - 1;
+        float randomY = playerPosition.y + sign * Random.Range(generateMinRadius, generateMaxRadius);
 
-        Vector2 generatePosition = (Vector2)player.transform.position + new Vector2(randomX, randomY);
+        for(int i = 0; i < entityList.Count; i++)
+        {
+            string key = entityList[i].name;
+            int activeCount = GetPoolActiveCount(key);
+            int entityCount = (int)(entityMaxAmount * (entityRatio[i] / 100));
+            if(activeCount < entityCount)
+            {
+                BaseEntity entity = Get(entityList[i]);
+                entity.prefab = entityList[i].gameObject;
+                entity.transform.position = new Vector2(randomX, randomY);
+                entity.Init();
+                
+            }
+        }
+    }
 
-        Instantiate(entityPrefab, generatePosition, Quaternion.identity);
+    public int GetPoolActiveCount(string poolKey)
+    {
+        if(pools.TryGetValue(poolKey, out IObjectPool pool))
+        {
+            return pool.ActiveCount;
+        }
+        return 0;
+    }
+    public void CreatePool<T>(T prefab, int initialSize) where T : MonoBehaviour
+    {
+        string key = prefab.name;
+        if (!pools.ContainsKey(key))
+        {
+            pools[key] = new ObjectPool<T>(prefab, initialSize, transform);
+        }
+    }
+
+    public T Get<T>(T prefab) where T : MonoBehaviour
+    {
+        string key = prefab.name;
+        if (!pools.ContainsKey(key))
+        {
+            CreatePool(prefab, 1);
+        }
+        ObjectPool<T> pool = (ObjectPool<T>)pools[key];
+        return pool.Get(); 
+    }
+
+    public void Return<T>(T obj) where T : MonoBehaviour
+    {
+        string key = obj.name.Replace("(Clone)", ""); // 移除克隆后缀
+        if (pools.ContainsKey(key))
+        {
+            ObjectPool<T> pool = (ObjectPool<T>)pools[key];
+            pool.Return(obj);
+        }
     }
 }

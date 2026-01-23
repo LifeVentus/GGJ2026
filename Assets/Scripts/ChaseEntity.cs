@@ -4,11 +4,11 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
-public class ChaseEntity : BaseEntity, IController
+public class EscapeEntity : BaseEntity, IController
 {
     [Header("实体属性")]
-    [SerializeField] private float escapeCoolTime;
-    private float escapeTimeCounter;
+    [SerializeField] private float chaseCoolTime;
+    private float chaseTimeCounter;
 
     [Header("组件获取")]
     [SerializeField] private TextMeshPro entityStateText;
@@ -22,7 +22,7 @@ public class ChaseEntity : BaseEntity, IController
     {
         base.Update();
         DetectCheck();
-        Escape();
+        Chase();
         UpdateStateText();
     }
 
@@ -30,11 +30,11 @@ public class ChaseEntity : BaseEntity, IController
     {
         if(entityState == EntityStates.normal)
         {
-            entityStateText.text = "(^o^)";
+            entityStateText.text = "(+o+)";
         }
         else if(entityState == EntityStates.running)
         {
-            entityStateText.text = "(>o<)";
+            entityStateText.text = "(*o*)";
         }
     }
     public override void Die()
@@ -50,15 +50,15 @@ public class ChaseEntity : BaseEntity, IController
         if(distanceWithPlayer <= detectRadius)
         {
             isPlayerdetected = true;
-            escapeTimeCounter = escapeCoolTime;
+            chaseTimeCounter = chaseCoolTime;
         }
         else
         {
             isPlayerdetected = false;
         }
-        escapeTimeCounter -= Time.deltaTime;
+        chaseTimeCounter -= Time.deltaTime;
 
-        if(isPlayerdetected || escapeTimeCounter > 0)
+        if(isPlayerdetected || chaseTimeCounter > 0)
         {
             entityState = EntityStates.running;
         }
@@ -68,7 +68,7 @@ public class ChaseEntity : BaseEntity, IController
         }
     }
 
-    private void Escape()
+    private void Chase()
     {
         if(entityState == EntityStates.running)
         {
@@ -88,6 +88,6 @@ public class ChaseEntity : BaseEntity, IController
 
     private Vector2 FindEscapeTargetPosition()
     {
-        return (transform.position - player.transform.position).normalized;
+        return (player.transform.position - transform.position).normalized;
     }
 }

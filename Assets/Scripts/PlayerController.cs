@@ -4,7 +4,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using QFramework;
 
-
 public class PlayerController : MonoBehaviour, IController
 {
     static private PlayerController instance;
@@ -27,12 +26,18 @@ public class PlayerController : MonoBehaviour, IController
     [Header("组件引用")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PlayerDataModel playerDateModel;
+    private PlayerAnimation playerAnimation;
 
     [Header("移动平滑")]
     [SerializeField] private float smoothTime = 0.1f;  // 平滑时间
     private Vector2 movementInput;  // 存储输入
     private Vector2 smoothedMovement;  // 平滑移动
     private Vector2 smoothVelocity;  // 平滑速度
+
+    public float invincibleCoolTime;
+    private bool isInvincible;
+    private float invincibleTimeCounter;
+
     void Awake()
     {
         if(instance != null && instance != this)
@@ -45,6 +50,7 @@ public class PlayerController : MonoBehaviour, IController
             DontDestroyOnLoad(gameObject);
         }
         rb = GetComponent<Rigidbody2D>();
+        playerAnimation = GetComponent<PlayerAnimation>();
     }
     void Start()
     {
@@ -55,10 +61,20 @@ public class PlayerController : MonoBehaviour, IController
     void Update()
     {
         movementInput = GetMovementInput();
+        CheckState();
     }
     void FixedUpdate()
     {
         MoveCharacter();
+    }
+
+    private void CheckState()
+    {
+        if (isInvincible)
+        { 
+            invincibleTimeCounter -= Time.deltaTime;
+            if(invincibleTimeCounter < 0) isInvincible = false;
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -74,7 +90,7 @@ public class PlayerController : MonoBehaviour, IController
                 case EntityType.medium:
                     if(playerDateModel.CurrentLevel < 2)
                     {
-                        Die();
+                        GetHurt();
                     }
                     else
                     {
@@ -84,7 +100,7 @@ public class PlayerController : MonoBehaviour, IController
                 case EntityType.big:
                     if(playerDateModel.CurrentLevel < 3)
                     {
-                        Die();
+                        GetHurt();
                     }
                     else
                     {
@@ -99,7 +115,14 @@ public class PlayerController : MonoBehaviour, IController
 
     public void GetHurt()
     {
+        if (isInvincible)
+        {
+            return;
+        }
         this.SendCommand(new ChangeHpCommand(-1));
+        isInvincible = true;
+        invincibleTimeCounter = invincibleCoolTime;
+        playerAnimation.Flash();
         if(playerDateModel.CurrentHp == 0)
         {
             Die();
