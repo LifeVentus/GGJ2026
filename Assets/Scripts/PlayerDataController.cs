@@ -30,7 +30,7 @@ public class PlayerDataController : MonoBehaviour, IController
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI expText;
     // Model获取
-    [SerializeField] private PlayerDataModel playerDateModel;
+    public PlayerDataModel playerDateModel;
 
     // 定义事件
 
@@ -43,7 +43,7 @@ public class PlayerDataController : MonoBehaviour, IController
         else
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         
     }
@@ -58,7 +58,8 @@ public class PlayerDataController : MonoBehaviour, IController
             UpdateView();
 
         }).UnRegisterWhenGameObjectDestroyed(gameObject);
-        UpdateView();
+        
+        Init();
 
     }
     void UpdateView()
@@ -75,8 +76,7 @@ public class PlayerDataController : MonoBehaviour, IController
         levelText.text = playerDateModel.CurrentLevel.ToString();
 
     }
-
-    private void Oestroy()
+    private void OnDestroy()
     {
         playerDateModel = null;
     }
@@ -84,5 +84,11 @@ public class PlayerDataController : MonoBehaviour, IController
     public IArchitecture GetArchitecture()
     {
         return PlayerData.Interface;
+    }
+
+    public void Init()
+    {
+        playerDateModel.Reset();
+        UpdateView();
     }
 }

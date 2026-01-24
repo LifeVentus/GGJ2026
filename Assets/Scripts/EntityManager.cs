@@ -37,7 +37,7 @@ public class EntityManager : MonoBehaviour
         else
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
 
         // 初始化对象池

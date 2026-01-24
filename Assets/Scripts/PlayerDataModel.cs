@@ -32,7 +32,11 @@ public class PlayerDataModel: AbstractModel
         CurrentHp = MaxHp;
         CurrentLevel = 1;
         CurrentEXPValue = 0;
+    }
 
+    public void Reset()
+    {
+        OnInit();
     }
 }
 

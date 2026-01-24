@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour, IController
         else
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         rb = GetComponent<Rigidbody2D>();
         playerAnimation = GetComponent<PlayerAnimation>();
@@ -182,7 +182,7 @@ public class PlayerController : MonoBehaviour, IController
         GetComponent<Collider2D>().enabled = false;
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
-        Time.timeScale = 0;
+        UIManager.Instance.ShowDieUI();
     }
     /// <summary>
     /// 范围检测
