@@ -1,6 +1,7 @@
-using UnityEngine;
 using QFramework;
+using System.Collections.Generic;
 using UnityEditor.SearchService;
+using UnityEngine;
 
 [System.Serializable]
 public class LevelEXPPair
@@ -19,13 +20,14 @@ public class PlayerDataModel: AbstractModel
     public int MaxLevel; // 最大等级
     public int CurrentEXPValue; // 当前经验值
     public int MaxEXP; // 最大经验值
+    public List<LevelEXPPair> levelEXPPairs;
 
     protected override void OnInit()
     {
         Score = 0;
         MaxHp = 6;
         MaxLevel = 3;
-        MaxEXP = 30;
+        MaxEXP = 10;
 
         CurrentHp = MaxHp;
         CurrentLevel = 1;
@@ -100,9 +102,12 @@ public class ChangeEXPValueCommand : AbstractCommand
             if(playerDataModel.CurrentLevel < playerDataModel.MaxLevel)
             {
                 playerDataModel.CurrentLevel++;
+                Debug.Log("Current level is: " +  playerDataModel.CurrentLevel);
+                Debug.Log("Current MaxEXP is: " + playerDataModel.MaxEXP);
             }
             // 升级后重新设置最大经验值
-            playerDataModel.MaxEXP = PlayerController.Instance.levelEXPPairs[playerDataModel.CurrentLevel].EXPValue;
+            playerDataModel.MaxEXP = PlayerDataController.Instance.levelEXPPairs[playerDataModel.CurrentLevel - 1].EXPValue;
+            
         }
         this.SendEvent<PlayerDataChangeEvent>();
     }

@@ -16,8 +16,7 @@ public class PlayerController : MonoBehaviour, IController
         }
     }
 
-    [Header("属性设置")]
-    public List<LevelEXPPair> levelEXPPairs = new List<LevelEXPPair>();
+    
 
     [Header("移动参数")]
     [SerializeField] private float moveSpeed = 5.0f;

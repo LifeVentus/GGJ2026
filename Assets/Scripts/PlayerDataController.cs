@@ -10,7 +10,19 @@ using UnityEngine.UI;
 
 public class PlayerDataController : MonoBehaviour, IController
 {
+    static private PlayerDataController instance;
+    static public PlayerDataController Instance
+    {
+        get
+        {
+            if (instance == null) return null;
+            return instance;
+        }
+    }
+    
     // 获取View组件
+    [Header("等级设置")]
+    public List<LevelEXPPair> levelEXPPairs = new List<LevelEXPPair>();
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private Slider hpSlider;
     [SerializeField] private Slider expSlider;
@@ -22,6 +34,19 @@ public class PlayerDataController : MonoBehaviour, IController
 
     // 定义事件
 
+    void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        
+    }
 
     void Start()
     {
@@ -48,6 +73,7 @@ public class PlayerDataController : MonoBehaviour, IController
         expText.text = playerDateModel.CurrentEXPValue.ToString();
 
         levelText.text = playerDateModel.CurrentLevel.ToString();
+
     }
 
     private void Oestroy()
