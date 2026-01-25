@@ -21,9 +21,9 @@ public class PlayerDataModel: AbstractModel
     public int CurrentEXPValue; // 当前经验值
     public int MaxEXP; // 最大经验值
     public List<LevelEXPPair> levelEXPPairs;  //各等级所需经验值序列
-    public float SwallowRadius; //范围吞噬半径
-    public float SwallowAngleOffset; //范围吞噬角度偏移量
-    public LayerMask EnemyLayerMask;
+    // public float SwallowRadius; //范围吞噬半径
+    // public float SwallowAngleOffset; //范围吞噬角度偏移量
+    // public LayerMask EnemyLayerMask;
 
     protected override void OnInit()
     {
@@ -36,10 +36,10 @@ public class PlayerDataModel: AbstractModel
         CurrentLevel = 1;
         CurrentEXPValue = 0;
 
-        SwallowRadius = 5.0f;
-        SwallowAngleOffset = 30f;
+        // SwallowRadius = 5.0f;
+        // SwallowAngleOffset = 30f;
 
-        EnemyLayerMask = 1 << LayerMask.NameToLayer("Enemy");
+        // EnemyLayerMask = 1 << LayerMask.NameToLayer("Enemy");
     }
 
     public void Reset()

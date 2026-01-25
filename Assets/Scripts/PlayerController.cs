@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using QFramework;
+using UnityEngine.Timeline;
 
 public class PlayerController : MonoBehaviour, IController
 {
@@ -16,16 +17,10 @@ public class PlayerController : MonoBehaviour, IController
         }
     }
 
-    
 
     [Header("移动参数")]
     [SerializeField] private float moveSpeed = 5.0f;
     // [SerializeField] private float volume = 10f;
-
-    [Header("组件引用")]
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private PlayerDataModel playerDateModel;
-    private PlayerAnimation playerAnimation;
 
     [Header("移动平滑")]
     [SerializeField] private float smoothTime = 0.1f;  // 平滑时间
@@ -33,9 +28,21 @@ public class PlayerController : MonoBehaviour, IController
     private Vector2 smoothedMovement;  // 平滑移动
     private Vector2 smoothVelocity;  // 平滑速度
 
+    [Header("战斗设置")]
+    [SerializeField] private float swallowRadius;
+    [SerializeField] private float swallowAngle;
+    [SerializeField] private LayerMask entityLayer;
+    [SerializeField] private float swallowCoolTime;
     public float invincibleCoolTime;
     private bool isInvincible;
     private float invincibleTimeCounter;
+    private float swallowTimeCounter;
+
+    [Header("组件引用")]
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private PlayerDataModel playerDateModel;
+    [SerializeField] private SwallowSector swallowSector;
+    private PlayerAnimation playerAnimation;
 
     void Awake()
     {
@@ -62,6 +69,11 @@ public class PlayerController : MonoBehaviour, IController
         movementInput = GetMovementInput();
         CheckState();
         TriggerSwallowSkill();
+        if(playerDateModel.CurrentLevel >= 3)
+        {
+            if(!swallowSector.isVisible) 
+                swallowSector.InitSector(swallowRadius, swallowAngle, swallowCoolTime);
+        }
     }
     void FixedUpdate()
     {
@@ -202,7 +214,7 @@ public class PlayerController : MonoBehaviour, IController
         //Get the mouse position
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
-        Vector3 playerDirection = mousePos - transform.position;
+        Vector3 mouseToPlayer = mousePos - transform.position;
 
         //Debug.Log("enemyLayer为"+LayerMask.LayerToName(enemyLayerMask));
 
@@ -213,7 +225,7 @@ public class PlayerController : MonoBehaviour, IController
             Vector2 toEnemy =
                 ((Vector2)hit.transform.position - (Vector2)transform.position).normalized;
 
-            if (Vector2.Angle((Vector2)playerDirection, toEnemy) <= sectorAngleOffset)
+            if (Vector2.Angle((Vector2)mouseToPlayer, toEnemy) <= sectorAngleOffset)
             {
                 hit.GetComponent<BaseEntity>().Die();
                 //Debug.Log("扇形吞噬已触发，敌人已被吞噬");
@@ -226,9 +238,15 @@ public class PlayerController : MonoBehaviour, IController
     /// </summary>
     public void TriggerSwallowSkill()
     {
+        swallowTimeCounter -= Time.deltaTime;
+        if(swallowTimeCounter >= 0)
+            return;
+        
         if (Input.GetMouseButtonDown(0) && playerDateModel.CurrentLevel >=3)
         {
-            IsInSwallowRange(playerDateModel.SwallowAngleOffset, playerDateModel.SwallowRadius, playerDateModel.EnemyLayerMask);
+            IsInSwallowRange(swallowAngle, swallowRadius, entityLayer);
+            swallowSector.SwitchSectorColor();
+            swallowTimeCounter = swallowCoolTime;
         }
     }
 
@@ -237,6 +255,8 @@ public class PlayerController : MonoBehaviour, IController
         Gizmos.color = Color.white;
         Gizmos.DrawWireSphere(transform.position, 10f);
         Gizmos.DrawWireSphere(transform.position, 30f);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, swallowRadius);
     }
     public IArchitecture GetArchitecture()
     {
