@@ -1085,17 +1085,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelEXPPairs:
   - Level: 1
-    EXPValue: 20
+    EXPValue: 10
   - Level: 2
-    EXPValue: 40
+    EXPValue: 10
   - Level: 3
-    EXPValue: 60
+    EXPValue: 10
   scoreText: {fileID: 523214453}
   hpSlider: {fileID: 1333984612}
   expSlider: {fileID: 1745122609}
   levelText: {fileID: 1567720466}
   hpText: {fileID: 493230687}
   expText: {fileID: 127892421}
+  SwallowRadius: 0
+  SwallowAngleOffset: 0
 --- !u!58 &379295176
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4192,6 +4194,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1721609182370476450, guid: 1095934c225208c478c7d4a70aced56e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 7685250740482322831, guid: 1095934c225208c478c7d4a70aced56e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.82
@@ -4235,6 +4241,14 @@ PrefabInstance:
     - target: {fileID: 7778468805461490717, guid: 1095934c225208c478c7d4a70aced56e, type: 3}
       propertyPath: m_Name
       value: EscapeEntity
+      objectReference: {fileID: 0}
+    - target: {fileID: 7778468805461490717, guid: 1095934c225208c478c7d4a70aced56e, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8313185584250193871, guid: 1095934c225208c478c7d4a70aced56e, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

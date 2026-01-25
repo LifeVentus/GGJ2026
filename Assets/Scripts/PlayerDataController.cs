@@ -29,6 +29,8 @@ public class PlayerDataController : MonoBehaviour, IController
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI expText;
+    [SerializeField] private float SwallowRadius;
+    [SerializeField] private float SwallowAngleOffset;
     // Model获取
     public PlayerDataModel playerDateModel;
 
@@ -74,6 +76,8 @@ public class PlayerDataController : MonoBehaviour, IController
         expText.text = playerDateModel.CurrentEXPValue.ToString();
 
         levelText.text = playerDateModel.CurrentLevel.ToString();
+        SwallowRadius = playerDateModel.SwallowRadius;
+        SwallowAngleOffset = playerDateModel.SwallowAngleOffset;
 
     }
     private void OnDestroy()

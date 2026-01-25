@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3997079178683464513}
   - component: {fileID: 6686230455735671350}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Amination
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 8263207915134195789}
   - component: {fileID: 6288581575253264689}
   - component: {fileID: 1768830045619759139}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PatrolEntity
   m_TagString: Entity
   m_Icon: {fileID: 0}
@@ -200,6 +200,7 @@ MonoBehaviour:
   minSize: 0.9
   maxSize: 1.3
   entityState: 0
+  prefab: {fileID: 0}
   moveSpeed: 3
   moveCoolTime: 5
   randomMoveRadius: 10
@@ -220,7 +221,7 @@ GameObject:
   - component: {fileID: 4425658953533214960}
   - component: {fileID: 4571653535942779253}
   - component: {fileID: 3693904983706303946}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: state
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour, IController
     {
         movementInput = GetMovementInput();
         CheckState();
+        TriggerSwallowSkill();
     }
     void FixedUpdate()
     {
@@ -192,6 +193,45 @@ public class PlayerController : MonoBehaviour, IController
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, detectRadius, targetLayer);
         return colliders.Length;
     }
+
+    /// <summary>
+    /// 判断敌人是否在扇形区域内
+    /// </summary>
+    public void IsInSwallowRange(float sectorAngleOffset, float sectorRadius, LayerMask enemyLayerMask)
+    {
+        //Get the mouse position
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0;
+        Vector3 playerDirection = mousePos - transform.position;
+
+        //Debug.Log("enemyLayer为"+LayerMask.LayerToName(enemyLayerMask));
+
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, sectorRadius, enemyLayerMask);
+
+        foreach (var hit in hits)
+        {
+            Vector2 toEnemy =
+                ((Vector2)hit.transform.position - (Vector2)transform.position).normalized;
+
+            if (Vector2.Angle((Vector2)playerDirection, toEnemy) <= sectorAngleOffset)
+            {
+                hit.GetComponent<BaseEntity>().Die();
+                //Debug.Log("扇形吞噬已触发，敌人已被吞噬");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 启用范围吞噬功能
+    /// </summary>
+    public void TriggerSwallowSkill()
+    {
+        if (Input.GetMouseButtonDown(0) && playerDateModel.CurrentLevel >=3)
+        {
+            IsInSwallowRange(playerDateModel.SwallowAngleOffset, playerDateModel.SwallowRadius, playerDateModel.EnemyLayerMask);
+        }
+    }
+
     void OnDrawGizmos()
     {
         Gizmos.color = Color.white;

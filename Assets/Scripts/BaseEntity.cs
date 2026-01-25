@@ -64,6 +64,7 @@ public abstract class BaseEntity : MonoBehaviour, IController
         spriteRenderer.color = color;
         SetNewRandomMoveTarget();
         currentSpeed = moveSpeed;
+        gameObject.layer = LayerMask.NameToLayer("Enemy");
     }
 
     public virtual void Recycle()

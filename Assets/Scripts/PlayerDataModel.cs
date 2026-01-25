@@ -20,7 +20,10 @@ public class PlayerDataModel: AbstractModel
     public int MaxLevel; // 最大等级
     public int CurrentEXPValue; // 当前经验值
     public int MaxEXP; // 最大经验值
-    public List<LevelEXPPair> levelEXPPairs;
+    public List<LevelEXPPair> levelEXPPairs;  //各等级所需经验值序列
+    public float SwallowRadius; //范围吞噬半径
+    public float SwallowAngleOffset; //范围吞噬角度偏移量
+    public LayerMask EnemyLayerMask;
 
     protected override void OnInit()
     {
@@ -32,6 +35,11 @@ public class PlayerDataModel: AbstractModel
         CurrentHp = MaxHp;
         CurrentLevel = 1;
         CurrentEXPValue = 0;
+
+        SwallowRadius = 5.0f;
+        SwallowAngleOffset = 30f;
+
+        EnemyLayerMask = 1 << LayerMask.NameToLayer("Enemy");
     }
 
     public void Reset()
@@ -106,8 +114,8 @@ public class ChangeEXPValueCommand : AbstractCommand
             if(playerDataModel.CurrentLevel < playerDataModel.MaxLevel)
             {
                 playerDataModel.CurrentLevel++;
-                Debug.Log("Current level is: " +  playerDataModel.CurrentLevel);
-                Debug.Log("Current MaxEXP is: " + playerDataModel.MaxEXP);
+                //Debug.Log("Current level is: " +  playerDataModel.CurrentLevel);
+                //Debug.Log("Current MaxEXP is: " + playerDataModel.MaxEXP);
             }
             // 升级后重新设置最大经验值
             playerDataModel.MaxEXP = PlayerDataController.Instance.levelEXPPairs[playerDataModel.CurrentLevel - 1].EXPValue;
