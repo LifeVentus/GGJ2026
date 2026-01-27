@@ -225,7 +225,7 @@ public class PlayerController : MonoBehaviour, IController
             Vector2 toEnemy =
                 ((Vector2)hit.transform.position - (Vector2)transform.position).normalized;
 
-            if (Vector2.Angle((Vector2)mouseToPlayer, toEnemy) <= sectorAngleOffset)
+            if (Vector2.Angle((Vector2)mouseToPlayer, toEnemy) <= (sectorAngleOffset / 2f))
             {
                 hit.GetComponent<BaseEntity>().Die();
                 //Debug.Log("扇形吞噬已触发，敌人已被吞噬");
