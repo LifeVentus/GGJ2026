@@ -1,5 +1,6 @@
 using QFramework;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.SearchService;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ public class PlayerDataModel: AbstractModel
     public int MaxLevel; // 最大等级
     public int CurrentEXPValue; // 当前经验值
     public int MaxEXP; // 最大经验值
-    public List<LevelEXPPair> levelEXPPairs;  //各等级所需经验值序列
+    // public List<LevelEXPPair> levelEXPPairs;  //各等级所需经验值序列
     // public float SwallowRadius; //范围吞噬半径
     // public float SwallowAngleOffset; //范围吞噬角度偏移量
     // public LayerMask EnemyLayerMask;
@@ -28,24 +29,23 @@ public class PlayerDataModel: AbstractModel
     protected override void OnInit()
     {
         Score = 0;
-        MaxHp = 6;
-        MaxLevel = 3;
-        MaxEXP = 10;
 
+        MaxHp = 6;
         CurrentHp = MaxHp;
+
         CurrentLevel = 1;
         CurrentEXPValue = 0;
+        MaxEXP = 10;
+        MaxLevel = 3;
 
-        // SwallowRadius = 5.0f;
-        // SwallowAngleOffset = 30f;
-
-        // EnemyLayerMask = 1 << LayerMask.NameToLayer("Enemy");
     }
 
     public void Reset()
     {
         OnInit();
     }
+
+
 }
 
 // 架构定义
@@ -108,21 +108,28 @@ public class ChangeEXPValueCommand : AbstractCommand
         PlayerDataModel playerDataModel = this.GetModel<PlayerDataModel>();
         playerDataModel.CurrentEXPValue += changedEXPValue_;
 
+        int currentLevel = playerDataModel.CurrentLevel;
+        int currentExp = playerDataModel.CurrentEXPValue;
+        int maxExp = PlayerDataController.Instance.levelEXPPairs[currentLevel - 1].EXPValue;
 
-        if(playerDataModel.CurrentEXPValue >= playerDataModel.MaxEXP)
+        if(currentLevel < playerDataModel.MaxLevel)
         {
-            // 重新设置当前经验值
-            playerDataModel.CurrentEXPValue = 0;
-            if(playerDataModel.CurrentLevel < playerDataModel.MaxLevel)
+            if(currentExp >= maxExp)
             {
-                playerDataModel.CurrentLevel++;
-                //Debug.Log("Current level is: " +  playerDataModel.CurrentLevel);
-                //Debug.Log("Current MaxEXP is: " + playerDataModel.MaxEXP);
+                // 重新设置当前经验值
+                currentExp = 0;
+                currentLevel++;
             }
-            // 升级后重新设置最大经验值
-            playerDataModel.MaxEXP = PlayerDataController.Instance.levelEXPPairs[playerDataModel.CurrentLevel - 1].EXPValue;
-            
         }
+        else
+        {
+            currentExp = (currentExp + changedEXPValue_) > maxExp ? maxExp : currentExp + changedEXPValue_;
+        }
+        // 升级后重新设置
+        playerDataModel.CurrentEXPValue = currentExp;
+        playerDataModel.CurrentLevel = currentLevel;
+        playerDataModel.MaxEXP = PlayerDataController.Instance.levelEXPPairs[currentLevel - 1].EXPValue;
+        
         this.SendEvent<PlayerDataChangeEvent>();
     }
 }

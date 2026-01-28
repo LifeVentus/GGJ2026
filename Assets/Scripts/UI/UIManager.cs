@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private IngameUI ingameUI;
     [SerializeField] private PauseUI pauseUI;
     [SerializeField] private DieUI dieUI;
+    [SerializeField] private SubtitleUI subtitleUI;
 
     void Awake()
     {
@@ -44,6 +45,15 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ShowRandomSubtitle(EntityType entityType)
+    {
+        subtitleUI.TypeRandomSubtitle(entityType);
+    }
+
+    public void ShowSubtitle(string text)
+    {
+        subtitleUI.TypeSubtitle(text);
+    }
     public void ShowDieUI()
     {
         ingameUI.Hide();

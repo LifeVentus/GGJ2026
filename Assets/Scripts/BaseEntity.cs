@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using QFramework;
 using Unity.VisualScripting;
 using UnityEditor.MPE;
@@ -43,7 +44,8 @@ public abstract class BaseEntity : MonoBehaviour, IController
     protected PlayerDataModel playerDataModel; // 玩家数据模型
 
     [Header("组件获取")]
-    [SerializeField] protected SpriteRenderer spriteRenderer; // 获取sprite
+    public SpriteRenderer spriteRenderer; // 获取sprite
+    public List<Sprite> spriteList = new List<Sprite>();
 
     protected virtual void Start()
     {
@@ -60,8 +62,14 @@ public abstract class BaseEntity : MonoBehaviour, IController
     {
         player = PlayerController.Instance;
         playerDataModel = this.GetModel<PlayerDataModel>();
-        transform.localScale *= Random.Range(minSize, maxSize);
+
+        float scaleRatio = Random.Range(minSize, maxSize) * 0.6f;
+        transform.localScale = new Vector3(scaleRatio, scaleRatio, scaleRatio);
+
+        int randomIndex = Random.Range(0, spriteList.Count - 1);
+        spriteRenderer.sprite = spriteList[randomIndex];
         spriteRenderer.color = color;
+        
         SetNewRandomMoveTarget();
         currentSpeed = moveSpeed;
         gameObject.layer = LayerMask.NameToLayer("Enemy");

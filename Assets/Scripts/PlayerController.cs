@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour, IController
     [SerializeField] private LayerMask entityLayer;
     [SerializeField] private float swallowCoolTime;
     public float invincibleCoolTime;
+
     private bool isInvincible;
     private float invincibleTimeCounter;
     private float swallowTimeCounter;
@@ -67,6 +68,7 @@ public class PlayerController : MonoBehaviour, IController
     {
         playerDateModel = this.GetModel<PlayerDataModel>();
         lastLevel = 1;
+
     }
 
     // Update is called once per frame
@@ -105,6 +107,8 @@ public class PlayerController : MonoBehaviour, IController
             {
                 case EntityType.small:
                     entity.Die();
+                    playerAnimation.sr.sprite = collision.gameObject.GetComponent<BaseEntity>().spriteRenderer.sprite;
+                    UIManager.Instance.ShowRandomSubtitle(EntityType.small);
                     break;
                 case EntityType.medium:
                     if(playerDateModel.CurrentLevel < 2)
@@ -114,6 +118,8 @@ public class PlayerController : MonoBehaviour, IController
                     else
                     {
                         entity.Die();
+                        playerAnimation.sr.sprite = collision.gameObject.GetComponent<BaseEntity>().spriteRenderer.sprite;
+                        UIManager.Instance.ShowRandomSubtitle(EntityType.medium);
                     }
                     break;
                 case EntityType.big:
@@ -124,6 +130,8 @@ public class PlayerController : MonoBehaviour, IController
                     else
                     {
                         entity.Die();
+                        playerAnimation.sr.sprite = collision.gameObject.GetComponent<BaseEntity>().spriteRenderer.sprite;
+                        UIManager.Instance.ShowRandomSubtitle(EntityType.big);
                     }
                     break;
                 default:
@@ -204,14 +212,6 @@ public class PlayerController : MonoBehaviour, IController
 
         UIManager.Instance.ShowDieUI();
     }
-    /// <summary>
-    /// 范围检测
-    /// </summary>
-    public int DetectCheck(LayerMask targetLayer, float detectRadius)
-    {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, detectRadius, targetLayer);
-        return colliders.Length;
-    }
 
     /// <summary>
     /// 判断敌人是否在扇形区域内
@@ -235,7 +235,8 @@ public class PlayerController : MonoBehaviour, IController
             if (Vector2.Angle((Vector2)mouseToPlayer, toEnemy) <= (sectorAngleOffset / 2f))
             {
                 hit.GetComponent<BaseEntity>().Die();
-                //Debug.Log("扇形吞噬已触发，敌人已被吞噬");
+                playerAnimation.sr.sprite = hit.gameObject.GetComponent<BaseEntity>().spriteRenderer.sprite;
+                UIManager.Instance.ShowRandomSubtitle(hit.GetComponent<BaseEntity>().entityType);
             }
         }
     }

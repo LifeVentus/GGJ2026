@@ -7,9 +7,10 @@ using DG.Tweening;
 using QFramework;
 using UnityEngine.SceneManagement;
 
-public class DieUI : MonoBehaviour
+public class PauseUI : MonoBehaviour
 {
     [SerializeField] private GameObject backGround;
+    [SerializeField] private Button continueBtn;
     [SerializeField] private Button restartBtn;
     [SerializeField] private Button menuBtn;
 
@@ -20,42 +21,38 @@ public class DieUI : MonoBehaviour
 
         PlayerController.Instance.enabled = false;
 
-        CanvasGroup cg = backGround.GetComponent<CanvasGroup>();
-        cg.alpha = 0;
-        cg.interactable = false;
-        cg.blocksRaycasts = false;
-
-        cg.DOFade(1, 0.3f).OnComplete(() =>
-        {
-            cg.interactable = true;
-            cg.blocksRaycasts = true;
-        });
+        Time.timeScale = 0;
     }
 
     public void Hide()
     {
-        cg.interactable = false;
-        cg.blocksRaycasts = false;
-
-        cg.DOFade(0, 0.3f);
+        Time.timeScale = 1;
+        PlayerController.Instance.enabled = true;
         gameObject.SetActive(false);
     }
     void Awake()
     {
+        continueBtn.onClick.AddListener(ReturnToGame);
         restartBtn.onClick.AddListener(Restart);
         menuBtn.onClick.AddListener(ReturnToMenu);
     }
 
     public void Restart()
     {
-        PlayerController.Instance.enabled = true;
-        PlayerDataController.Instance.Init();
+        PlayerDataController.Instance.PlayerDataModelInit();
+        Hide();
+        
         SceneManager.LoadScene("Game");
     }
 
     public void ReturnToMenu()
     {
+        Hide();
         SceneManager.LoadScene("MainMenu");
+    }
+    public void ReturnToGame()
+    {
+        Hide();
     }
 
 }

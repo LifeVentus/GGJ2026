@@ -19,22 +19,20 @@ public class PlayerDataController : MonoBehaviour, IController
             return instance;
         }
     }
+    // Model获取
+    public PlayerDataModel playerDateModel;
     
     // 获取View组件
     [Header("等级设置")]
     public List<LevelEXPPair> levelEXPPairs = new List<LevelEXPPair>();
+
+    [Header("UI设置")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private Slider hpSlider;
     [SerializeField] private Slider expSlider;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI expText;
-    // [SerializeField] private float SwallowRadius;
-    // [SerializeField] private float SwallowAngleOffset;
-    // Model获取
-    public PlayerDataModel playerDateModel;
-
-    // 定义事件
 
     void Awake()
     {
@@ -45,7 +43,6 @@ public class PlayerDataController : MonoBehaviour, IController
         else
         {
             instance = this;
-            // DontDestroyOnLoad(gameObject);
         }
         
     }
@@ -61,24 +58,22 @@ public class PlayerDataController : MonoBehaviour, IController
 
         }).UnRegisterWhenGameObjectDestroyed(gameObject);
         
-        Init();
+        PlayerDataModelInit();
 
+        UpdateView();
     }
     void UpdateView()
     {
-        scoreText.text = playerDateModel.Score.ToString();
+        scoreText.text = "Score: " + playerDateModel.Score.ToString();
 
         hpSlider.value = playerDateModel.CurrentHp;
         hpText.text = playerDateModel.CurrentHp.ToString();
 
         expSlider.maxValue = playerDateModel.MaxEXP;
         expSlider.value = playerDateModel.CurrentEXPValue;
-        expText.text = playerDateModel.CurrentEXPValue.ToString();
+        expText.text = playerDateModel.CurrentEXPValue.ToString() + "/" + playerDateModel.MaxEXP.ToString();
 
-        levelText.text = playerDateModel.CurrentLevel.ToString();
-        // SwallowRadius = playerDateModel.SwallowRadius;
-        // SwallowAngleOffset = playerDateModel.SwallowAngleOffset;
-
+        levelText.text = "Lv." + playerDateModel.CurrentLevel.ToString();
     }
     private void OnDestroy()
     {
@@ -90,9 +85,19 @@ public class PlayerDataController : MonoBehaviour, IController
         return PlayerData.Interface;
     }
 
-    public void Init()
+    public void PlayerDataModelInit()
     {
-        playerDateModel.Reset();
+        playerDateModel.Score = 0;
+
+        playerDateModel.MaxHp = 6;
+        playerDateModel.CurrentHp = playerDateModel.MaxHp;
+
+        playerDateModel.CurrentLevel = 1;
+        playerDateModel.CurrentEXPValue = 0;
+
+        playerDateModel.MaxEXP = levelEXPPairs[playerDateModel.CurrentLevel - 1].EXPValue;
+        playerDateModel.MaxLevel = 3;
+
         UpdateView();
     }
 }

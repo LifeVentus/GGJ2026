@@ -23,7 +23,11 @@ public class SwallowSector : MonoBehaviour
         Vector2 dir = mousePosition - (Vector2)transform.position;
         float targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, targetAngle);
-        UpdateSectorMesh();
+    }
+
+    void LateUpdate()
+    {
+        UpdateSectorMesh(); 
     }
 
     private void Start()

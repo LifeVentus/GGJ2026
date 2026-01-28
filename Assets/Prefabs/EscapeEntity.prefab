@@ -196,7 +196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityType: 0
   scoreValue: 1
-  color: {r: 0.4423797, g: 1, b: 0, a: 1}
+  color: {r: 0.8413467, g: 1, b: 0.7150943, a: 1}
   minSize: 0.7
   maxSize: 1
   entityState: 0
@@ -209,6 +209,12 @@ MonoBehaviour:
   isPlayerdetected: 0
   chaseSpeed: 2
   spriteRenderer: {fileID: 6686230455735671350}
+  spriteList:
+  - {fileID: 21300000, guid: 34fff61ec44fdf14ba196c4c0047b1d3, type: 3}
+  - {fileID: 21300000, guid: 90ac5061a9b213d4496a7792071dfc1c, type: 3}
+  - {fileID: 21300000, guid: d251116c07e7f3c45ba133586280f0e5, type: 3}
+  - {fileID: 21300000, guid: d706030ba8a801e4587f52119cf1589f, type: 3}
+  - {fileID: 21300000, guid: 537ce4076c3968c4d98d77ae24dd6496, type: 3}
   escapeCoolTime: 5
   entityStateText: {fileID: 3693904983706303946}
 --- !u!1 &8313185584250193871
