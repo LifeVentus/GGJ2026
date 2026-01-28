@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using QFramework;
 using UnityEngine.Timeline;
+using System;
 
 public class PlayerController : MonoBehaviour, IController
 {
@@ -44,6 +45,10 @@ public class PlayerController : MonoBehaviour, IController
     [SerializeField] private SwallowSector swallowSector;
     private PlayerAnimation playerAnimation;
 
+    // 玩家升级事件
+    private int lastLevel;
+    public event Action OnLevelUpEvent;
+
     void Awake()
     {
         if(instance != null && instance != this)
@@ -61,6 +66,7 @@ public class PlayerController : MonoBehaviour, IController
     void Start()
     {
         playerDateModel = this.GetModel<PlayerDataModel>();
+        lastLevel = 1;
     }
 
     // Update is called once per frame
@@ -68,6 +74,7 @@ public class PlayerController : MonoBehaviour, IController
     {
         movementInput = GetMovementInput();
         CheckState();
+        PlayerUpgradeDetect();
         TriggerSwallowSkill();
         if(playerDateModel.CurrentLevel >= 3)
         {
@@ -134,7 +141,7 @@ public class PlayerController : MonoBehaviour, IController
         this.SendCommand(new ChangeHpCommand(-1));
         isInvincible = true;
         invincibleTimeCounter = invincibleCoolTime;
-        playerAnimation.Flash();
+        playerAnimation.InvincibleFlash();
         if(playerDateModel.CurrentHp == 0)
         {
             Die();
@@ -249,6 +256,24 @@ public class PlayerController : MonoBehaviour, IController
             swallowTimeCounter = swallowCoolTime;
         }
     }
+
+    /// <summary>
+    /// 玩家升级检测
+    /// </summary>
+    public void PlayerUpgradeDetect()
+    {
+        
+        if (lastLevel < playerDateModel.CurrentLevel)
+        {
+            //Debug.Log("lastLevel" + lastLevel);
+            //Debug.Log("CurrentLevel" + playerDateModel.CurrentLevel);
+            isInvincible = true;
+            invincibleTimeCounter = invincibleCoolTime;
+            OnLevelUpEvent?.Invoke();
+            lastLevel = playerDateModel.CurrentLevel;
+        }
+    }
+
 
     void OnDrawGizmos()
     {
