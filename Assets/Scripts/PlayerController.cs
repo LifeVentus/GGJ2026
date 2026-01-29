@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour, IController
 
     [Header("移动参数")]
     [SerializeField] private float moveSpeed = 5.0f;
+    [SerializeField] private float dashSpeed = 8.0f;
+    private float currentSpeed;
     // [SerializeField] private float volume = 10f;
 
     [Header("移动平滑")]
@@ -30,15 +32,19 @@ public class PlayerController : MonoBehaviour, IController
     private Vector2 smoothVelocity;  // 平滑速度
 
     [Header("战斗设置")]
+    [SerializeField] private bool swallow;
     [SerializeField] private float swallowRadius;
     [SerializeField] private float swallowAngle;
     [SerializeField] private LayerMask entityLayer;
     [SerializeField] private float swallowCoolTime;
     public float invincibleCoolTime;
+    public float dashCoolTime;
 
     private bool isInvincible;
+    private bool isDash;
     private float invincibleTimeCounter;
     private float swallowTimeCounter;
+    private float dashTimeCounter;
 
     [Header("组件引用")]
     [SerializeField] private Rigidbody2D rb;
@@ -68,7 +74,7 @@ public class PlayerController : MonoBehaviour, IController
     {
         playerDateModel = this.GetModel<PlayerDataModel>();
         lastLevel = 1;
-
+        currentSpeed = moveSpeed;
     }
 
     // Update is called once per frame
@@ -77,11 +83,14 @@ public class PlayerController : MonoBehaviour, IController
         movementInput = GetMovementInput();
         CheckState();
         PlayerUpgradeDetect();
-        TriggerSwallowSkill();
-        if(playerDateModel.CurrentLevel >= 3)
+        if (swallow)
         {
-            if(!swallowSector.isVisible) 
-                swallowSector.InitSector(swallowRadius, swallowAngle, swallowCoolTime);
+            TriggerSwallowSkill();
+            if(playerDateModel.CurrentLevel >= 3)
+            {
+                if(!swallowSector.isVisible) 
+                    swallowSector.InitSector(swallowRadius, swallowAngle, swallowCoolTime);
+            }
         }
     }
     void FixedUpdate()
@@ -96,7 +105,18 @@ public class PlayerController : MonoBehaviour, IController
             invincibleTimeCounter -= Time.deltaTime;
             if(invincibleTimeCounter < 0) isInvincible = false;
         }
+        if (isDash)
+        {
+            dashTimeCounter -= Time.deltaTime;
+            if(dashTimeCounter < 0)
+            {
+                isDash = false;
+                currentSpeed = moveSpeed;
+            }
+
+        }
     }
+
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -137,9 +157,19 @@ public class PlayerController : MonoBehaviour, IController
                 default:
                     break;
             }
+            if(playerDateModel.CurrentLevel >= 3)
+            {
+                Dash();
+            }
         }
     }
 
+    public void Dash()
+    {
+        isDash = true;
+        currentSpeed = dashSpeed;
+        dashTimeCounter = dashCoolTime;
+    }
     public void GetHurt()
     {
         if (isInvincible)
@@ -175,7 +205,7 @@ public class PlayerController : MonoBehaviour, IController
         if (movementInput.magnitude > 0.1f)
         {
             // 计算目标速度
-            Vector2 targetVelocity = movementInput * moveSpeed;
+            Vector2 targetVelocity = movementInput * currentSpeed;
             
             // 应用平滑移动
             smoothedMovement = Vector2.SmoothDamp(

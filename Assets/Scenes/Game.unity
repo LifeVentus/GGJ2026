@@ -1158,14 +1158,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  dashSpeed: 10
   smoothTime: 0.1
+  swallow: 0
   swallowRadius: 5
   swallowAngle: 30
   entityLayer:
     serializedVersion: 2
     m_Bits: 128
-  swallowCoolTime: 2
-  invincibleCoolTime: 3
+  swallowCoolTime: 1
+  invincibleCoolTime: 2
+  dashCoolTime: 2
   rb: {fileID: 379295172}
   swallowSector: {fileID: 138926501}
 --- !u!4 &379295174
@@ -1259,7 +1262,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sr: {fileID: 1288720942}
   invincibleFlashInterval: 0.1
-  upgradeFlashInterval: 1.5
+  upgradeFlashInterval: 0.2
   originalColor: {r: 1, g: 1, b: 1, a: 1}
   invincibleColor: {r: 1, g: 1, b: 1, a: 0.46666667}
   upgradeCoolTime: 2
