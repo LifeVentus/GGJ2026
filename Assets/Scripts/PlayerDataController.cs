@@ -28,8 +28,8 @@ public class PlayerDataController : MonoBehaviour, IController
 
     [Header("UI设置")]
     [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private Slider hpSlider;
-    [SerializeField] private Slider expSlider;
+    [SerializeField] private Image hpSlider;
+    [SerializeField] private Image expSlider;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private TextMeshProUGUI expText;
@@ -66,11 +66,11 @@ public class PlayerDataController : MonoBehaviour, IController
     {
         scoreText.text = "Score: " + playerDateModel.Score.ToString();
 
-        hpSlider.value = playerDateModel.CurrentHp;
+        hpSlider.fillAmount = (float)playerDateModel.CurrentHp / playerDateModel.MaxHp;
         hpText.text = playerDateModel.CurrentHp.ToString();
 
-        expSlider.maxValue = playerDateModel.MaxEXP;
-        expSlider.value = playerDateModel.CurrentEXPValue;
+        // expSlider.fillAmount = playerDateModel.MaxEXP;
+        expSlider.fillAmount = (float)playerDateModel.CurrentEXPValue / playerDateModel.MaxEXP;
         expText.text = playerDateModel.CurrentEXPValue.ToString() + "/" + playerDateModel.MaxEXP.ToString();
 
         levelText.text = "Lv." + playerDateModel.CurrentLevel.ToString();

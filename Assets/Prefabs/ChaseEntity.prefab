@@ -196,9 +196,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityType: 2
   scoreValue: 5
-  color: {r: 1, g: 0.7150943, b: 0.7150943, a: 1}
-  minSize: 1.1
-  maxSize: 1.3
+  color: {r: 1, g: 0.61698115, b: 0.61698115, a: 1}
+  minSize: 1.5
+  maxSize: 1.6
   entityState: 0
   prefab: {fileID: 0}
   moveSpeed: 1
