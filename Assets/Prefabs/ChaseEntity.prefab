@@ -196,7 +196,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityType: 2
   scoreValue: 5
-  color: {r: 1, g: 0.61698115, b: 0.61698115, a: 1}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  specialColor: {r: 1, g: 0.60188675, b: 0.60188675, a: 1}
   minSize: 1.5
   maxSize: 1.6
   entityState: 0

@@ -1,0 +1,27 @@
+{
+  "commonText": [
+    "common1",
+    "common2",
+    "common3"
+  ],
+  "weirdText": [
+    "Weird1",
+    "Weird2",
+    "Weird3"
+  ],
+  "abstractText": [
+    "Abstract1",
+    "Abstract2",
+    "Abstract3"
+  ],
+  "subtitlePairs": [
+    {
+      "key": "start",
+      "value": "Game Start"
+    },
+    {
+      "key": "end",
+      "value": "Game Over"
+    }
+  ]
+}

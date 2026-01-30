@@ -20,7 +20,8 @@ public abstract class BaseEntity : MonoBehaviour, IController
     [Header("实体属性")]
     public EntityType entityType; // 实体类型
     [SerializeField] protected int scoreValue; // 实体分数值
-    [SerializeField] protected Color color; // 实体颜色
+    [SerializeField] protected Color normalColor; // 实体颜色
+    [SerializeField] protected Color specialColor;
     [SerializeField] protected float minSize;
     [SerializeField] protected float maxSize;
     public EntityStates entityState;
@@ -50,6 +51,7 @@ public abstract class BaseEntity : MonoBehaviour, IController
     protected virtual void Start()
     {
         Init();
+        player.OnLevelUpEvent += ChangeEntityColor;
     }
     protected virtual void Update()
     {
@@ -58,6 +60,32 @@ public abstract class BaseEntity : MonoBehaviour, IController
         DestroyOutOfDistance();
     }
 
+    public virtual void ChangeEntityColor()
+    {
+        if(spriteRenderer.color == specialColor)
+        {
+            switch (entityType)
+            {
+                case EntityType.small:
+                    spriteRenderer.color = normalColor;
+                break;
+                case EntityType.medium:
+                    if(playerDataModel.CurrentLevel >= 2)
+                    {
+                        spriteRenderer.color = normalColor;
+                    }
+                break;
+                case EntityType.big:
+                    if(playerDataModel.CurrentLevel >= 3)
+                    {
+                        spriteRenderer.color = normalColor;
+                    }
+                break;
+                default:
+                break;
+            }
+        }
+    }
     public virtual void Init()
     {
         player = PlayerController.Instance;
@@ -68,7 +96,9 @@ public abstract class BaseEntity : MonoBehaviour, IController
 
         int randomIndex = Random.Range(0, spriteList.Count - 1);
         spriteRenderer.sprite = spriteList[randomIndex];
-        spriteRenderer.color = color;
+
+        spriteRenderer.color = specialColor;
+        ChangeEntityColor();
         
         SetNewRandomMoveTarget();
         currentSpeed = moveSpeed;

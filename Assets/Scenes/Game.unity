@@ -4179,19 +4179,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2b49f16fc3b2b94da4f86d601c7a046, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  commonText:
-  - commmon1
-  - common2
-  - common3
-  weirdText:
-  - Weird1
-  - Weird2
-  - Weird3
-  abstractText:
-  - Abstract1
-  - Abstract2
-  - Abstract3
-  subtitleText: []
+  commonText: []
+  weirdText: []
+  abstractText: []
+  subtitleJson: {fileID: 4900000, guid: 7f1d734b81cb4a942bdea3485121c10f, type: 3}
+  subtitleData:
+    commonText: []
+    weirdText: []
+    abstractText: []
+    subtitlePairs: []
 --- !u!4 &1659683818
 Transform:
   m_ObjectHideFlags: 0
