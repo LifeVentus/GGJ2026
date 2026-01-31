@@ -126,6 +126,7 @@ public class PlayerController : MonoBehaviour, IController
             switch (entity.entityType)
             {
                 case EntityType.small:
+                    SoundManager.Instance.PlaySwallowAudio();
                     entity.Die();
                     playerAnimation.sr.sprite = collision.gameObject.GetComponent<BaseEntity>().spriteRenderer.sprite;
                     UIManager.Instance.ShowRandomSubtitle(EntityType.small);
@@ -137,6 +138,7 @@ public class PlayerController : MonoBehaviour, IController
                     }
                     else
                     {
+                        SoundManager.Instance.PlaySwallowAudio();
                         entity.Die();
                         playerAnimation.sr.sprite = collision.gameObject.GetComponent<BaseEntity>().spriteRenderer.sprite;
                         UIManager.Instance.ShowRandomSubtitle(EntityType.medium);
@@ -149,6 +151,7 @@ public class PlayerController : MonoBehaviour, IController
                     }
                     else
                     {
+                        SoundManager.Instance.PlaySwallowAudio();
                         entity.Die();
                         playerAnimation.sr.sprite = collision.gameObject.GetComponent<BaseEntity>().spriteRenderer.sprite;
                         UIManager.Instance.ShowRandomSubtitle(EntityType.big);
@@ -176,6 +179,7 @@ public class PlayerController : MonoBehaviour, IController
         {
             return;
         }
+        SoundManager.Instance.PlayGetHurtAudio();
         this.SendCommand(new ChangeHpCommand(-1));
         isInvincible = true;
         invincibleTimeCounter = invincibleCoolTime;
@@ -239,7 +243,7 @@ public class PlayerController : MonoBehaviour, IController
     {
         GetComponent<Collider2D>().enabled = false;
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-
+        SoundManager.Instance.PlayFailAudio();
         UIManager.Instance.ShowDieUI();
     }
 
@@ -300,6 +304,7 @@ public class PlayerController : MonoBehaviour, IController
             //Debug.Log("CurrentLevel" + playerDateModel.CurrentLevel);
             isInvincible = true;
             invincibleTimeCounter = invincibleCoolTime;
+            SoundManager.Instance.PlayLevelUpAudio();
             OnLevelUpEvent?.Invoke();
             lastLevel = playerDateModel.CurrentLevel;
         }
