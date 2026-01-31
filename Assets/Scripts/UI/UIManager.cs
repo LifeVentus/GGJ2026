@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private PauseUI pauseUI;
     [SerializeField] private DieUI dieUI;
     [SerializeField] private SubtitleUI subtitleUI;
+    [SerializeField] private bool resumeFlag;
 
     void Awake()
     {
@@ -36,12 +37,13 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         ingameUI.Show();
+        resumeFlag = true;
     }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ShowPauseUI();
+            ToggleByEsc();
         }
     }
 
@@ -66,4 +68,39 @@ public class UIManager : MonoBehaviour
         pauseUI.Show();
     }
 
+    public void HidePauseUI()
+    {
+        ingameUI.Show();
+        pauseUI.Hide();
+    }
+
+    public void ToggleByClick()
+    {
+        if (resumeFlag)
+        {
+            ShowPauseUI();
+            resumeFlag = false;
+        }
+        else
+        {
+            HidePauseUI();
+            resumeFlag = true;
+        }
+    }
+    public void ToggleByEsc()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (resumeFlag)
+            {
+                ShowPauseUI();
+                resumeFlag = false;
+            }
+            else
+            {
+                HidePauseUI();
+                resumeFlag = true;
+            }
+        }
+    }
 }

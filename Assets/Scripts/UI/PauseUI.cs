@@ -52,7 +52,8 @@ public class PauseUI : MonoBehaviour
     }
     public void ReturnToGame()
     {
-        Hide();
+        //Hide();
+        UIManager.Instance.ToggleByClick();
     }
 
 }
