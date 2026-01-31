@@ -16,18 +16,18 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    [Header("±³¾°ÒôĞ§")]
+    [Header("èƒŒæ™¯éŸ³æ•ˆ")]
     [SerializeField] private AudioClip bgmAudio;
 
-    [Header("µã»÷ÒôĞ§")]
+    [Header("ç‚¹å‡»éŸ³æ•ˆ")]
     [SerializeField] private AudioClip clickAudio;
 
-    [Header("½ÇÉ«ÒôĞ§")]
+    [Header("è§’è‰²éŸ³æ•ˆ")]
     [SerializeField] private AudioClip levelUpAudio;
     [SerializeField] private AudioClip swallowAudio;
     [SerializeField] private AudioClip getHurtAudio;
 
-    [Header("³¡¾°ÒôĞ§")]
+    [Header("åœºæ™¯éŸ³æ•ˆ")]
     [SerializeField] private AudioClip failAudio;
     [SerializeField] private AudioClip victoryAudio;
 
@@ -46,10 +46,10 @@ public class SoundManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //³õÊ¼»¯ÒôÔ´
+        //åˆå§‹åŒ–éŸ³æº
         InitSource();
 
-        //¿ªÊ¼Ê±²¥·Å±³¾°ÒôÀÖ
+        //å¼€å§‹æ—¶æ’­æ”¾èƒŒæ™¯éŸ³ä¹
         InitBGM();
     }
 
