@@ -18,11 +18,13 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
+        SoundManager.Instance.PlayClickAudio();
         SceneManager.LoadScene("Game");
     }
 
     public void QuitGame()
     {
+        SoundManager.Instance.PlayClickAudio();
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #else

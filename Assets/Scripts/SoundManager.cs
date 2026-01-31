@@ -80,9 +80,13 @@ public class SoundManager : MonoBehaviour
 
     private void InitBGM()
     {
-        bgmSource.clip = bgmAudio;
-        bgmSource.loop = true;
-        bgmSource.Play();
+        if (!bgmSource.isPlaying)
+        {
+            bgmSource.clip = bgmAudio;
+            bgmSource.loop = true;
+            bgmSource.Play();
+        }
+        
     }
 
     public void PauseBGM()
@@ -95,6 +99,12 @@ public class SoundManager : MonoBehaviour
     {
         bgmSource.loop = true;
         bgmSource.Play();
+    }
+
+    public void StopBGM()
+    {
+        bgmSource.loop = false;
+        bgmSource.Stop();
     }
 
     public void PlayClickAudio()
