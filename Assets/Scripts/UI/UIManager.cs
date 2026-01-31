@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private IngameUI ingameUI;
     [SerializeField] private PauseUI pauseUI;
     [SerializeField] private DieUI dieUI;
-    [SerializeField] private SubtitleUI subtitleUI;
+    public SubtitleUI subtitleUI;
     [SerializeField] private bool resumeFlag;
     [SerializeField] private VictoryUI victoryUI;
     [SerializeField] private TeachUI teachUI;
@@ -45,11 +45,13 @@ public class UIManager : MonoBehaviour
         }
         else
         {
+            subtitleUI.TypeStartSubtitle();
             ShowTeach();
         }
 
         resumeFlag = true;
         PlayerController.Instance.OnTeachEntityDied += HideTeach;
+
     }
     void Update()
     {
@@ -121,8 +123,17 @@ public class UIManager : MonoBehaviour
 
     public void ShowVictory()
     {
+        StartCoroutine(VictoryCoroutine());
+    }
+
+    public IEnumerator VictoryCoroutine()
+    {
         ingameUI.Hide();
         victoryUI.Show();
+
+        subtitleUI.TypeSubtitle(SubtitleManager.Instance.subtitleText["end"]);
+        yield return new WaitForSeconds(3f);
+        subtitleUI.gameObject.SetActive(false);
     }
     public void ShowTeach()
     {
@@ -135,5 +146,6 @@ public class UIManager : MonoBehaviour
         teachUI.Hide();
         isTeached = true;
         ingameUI.Show();
+        subtitleUI.StartGameSubtile();
     }
 }

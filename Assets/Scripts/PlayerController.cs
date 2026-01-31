@@ -5,6 +5,7 @@ using UnityEngine;
 using QFramework;
 using UnityEngine.Timeline;
 using System;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour, IController
 {
@@ -56,6 +57,10 @@ public class PlayerController : MonoBehaviour, IController
     private int lastLevel;
     public event Action OnLevelUpEvent;
     public event Action OnTeachEntityDied;
+
+    [Header("字幕打印")]
+    private int firstLevelUp = 1; 
+    private int firstHurt = 1;
 
     void Awake()
     {
@@ -169,7 +174,6 @@ public class PlayerController : MonoBehaviour, IController
                     entity.Die();
                     OnTeachEntityDied?.Invoke();
                     playerAnimation.sr.sprite = collision.gameObject.GetComponent<BaseEntity>().spriteRenderer.sprite;
-                    // UIManager.Instance.ShowRandomSubtitle(EntityType.big);
                     break;
                 default:
                     break;
@@ -192,6 +196,12 @@ public class PlayerController : MonoBehaviour, IController
         if (isInvincible)
         {
             return;
+        }
+
+        if(firstHurt == 1)
+        {
+            UIManager.Instance.subtitleUI.TypeSubtitle(SubtitleManager.Instance.subtitleText["firstHurt"]);
+            firstHurt--;
         }
         SoundManager.Instance.PlayGetHurtAudio();
         this.SendCommand(new ChangeHpCommand(-1));
@@ -311,7 +321,6 @@ public class PlayerController : MonoBehaviour, IController
     /// </summary>
     public void PlayerUpgradeDetect()
     {
-        
         if (lastLevel < playerDateModel.CurrentLevel)
         {
             //Debug.Log("lastLevel" + lastLevel);
@@ -320,6 +329,14 @@ public class PlayerController : MonoBehaviour, IController
             invincibleTimeCounter = invincibleCoolTime;
             SoundManager.Instance.PlayLevelUpAudio();
             OnLevelUpEvent?.Invoke();
+            if(lastLevel == 1)
+            {
+                UIManager.Instance.subtitleUI.TypeSubtitle(SubtitleManager.Instance.subtitleText["levelup1"]);
+            }
+            else if(lastLevel == 2)
+            {
+                UIManager.Instance.subtitleUI.TypeSubtitle(SubtitleManager.Instance.subtitleText["levelup2"]);
+            }
             lastLevel = playerDateModel.CurrentLevel;
         }
     }

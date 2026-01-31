@@ -49,6 +49,14 @@ public class SubtitleManager : MonoBehaviour
             instance = this;
             // DontDestroyOnLoad(gameObject);
         }
+        LoadFromJson();
+        randomTextDic[EntityType.small] = subtitleData.commonText;
+        randomTextDic[EntityType.medium] = subtitleData.weirdText;
+        randomTextDic[EntityType.big] = subtitleData.abstractText;
+        foreach(SubtitleDictionary item in subtitleData.subtitlePairs)
+        {
+            subtitleText[item.key] = item.value;
+        }
     }
 
     void Start()
