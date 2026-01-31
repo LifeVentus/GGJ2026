@@ -8,7 +8,8 @@ public enum EntityType
 {
     small,
     medium,
-    big
+    big,
+    teach
 }
 public enum EntityStates
 {
@@ -80,6 +81,9 @@ public abstract class BaseEntity : MonoBehaviour, IController
                     {
                         spriteRenderer.color = normalColor;
                     }
+                break;
+                case EntityType.teach:
+                    spriteRenderer.color = normalColor;
                 break;
                 default:
                 break;

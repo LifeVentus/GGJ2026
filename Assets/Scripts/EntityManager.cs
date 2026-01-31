@@ -25,6 +25,9 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private int entityMaxAmount;
     [SerializeField] private float generateMinRadius;
     [SerializeField] private float generateMaxRadius;
+    [SerializeField] private bool isGaming;
+
+    [SerializeField] private TeachEntity teachEntity;
 
     private float coolTimeCounter;
     private PlayerController player;
@@ -50,13 +53,21 @@ public class EntityManager : MonoBehaviour
     void Start()
     {
         player = PlayerController.Instance;
-        
+        player.OnTeachEntityDied += StartGenerateEntity;
     }
 
     // Update is called once per frame
     void Update()
     {
-        GenerateEntity();
+        if (isGaming)
+        {
+            GenerateEntity();
+        }
+    }
+
+    public void StartGenerateEntity()
+    {
+        isGaming = true;
     }
     private void GenerateEntity()
     {

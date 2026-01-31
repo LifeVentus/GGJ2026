@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour, IController
     // 玩家升级事件
     private int lastLevel;
     public event Action OnLevelUpEvent;
+    public event Action OnTeachEntityDied;
 
     void Awake()
     {
@@ -98,6 +99,7 @@ public class PlayerController : MonoBehaviour, IController
         MoveCharacter();
     }
 
+
     private void CheckState()
     {
         if (isInvincible)
@@ -114,6 +116,11 @@ public class PlayerController : MonoBehaviour, IController
                 currentSpeed = moveSpeed;
             }
 
+        }
+        if(playerDateModel.CurrentLevel == playerDateModel.MaxLevel && playerDateModel.CurrentEXPValue == playerDateModel.MaxEXP)
+        {
+            UIManager.Instance.ShowVictory();
+            SoundManager.Instance.PlayVictoryAudio();
         }
     }
 
@@ -156,6 +163,13 @@ public class PlayerController : MonoBehaviour, IController
                         playerAnimation.sr.sprite = collision.gameObject.GetComponent<BaseEntity>().spriteRenderer.sprite;
                         UIManager.Instance.ShowRandomSubtitle(EntityType.big);
                     }
+                    break;
+                case EntityType.teach:
+                    SoundManager.Instance.PlaySwallowAudio();
+                    entity.Die();
+                    OnTeachEntityDied?.Invoke();
+                    playerAnimation.sr.sprite = collision.gameObject.GetComponent<BaseEntity>().spriteRenderer.sprite;
+                    // UIManager.Instance.ShowRandomSubtitle(EntityType.big);
                     break;
                 default:
                     break;

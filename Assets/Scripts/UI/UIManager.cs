@@ -20,6 +20,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private DieUI dieUI;
     [SerializeField] private SubtitleUI subtitleUI;
     [SerializeField] private bool resumeFlag;
+    [SerializeField] private VictoryUI victoryUI;
+    [SerializeField] private TeachUI teachUI;
+    public bool isTeached;
 
     void Awake()
     {
@@ -36,8 +39,17 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        ingameUI.Show();
+        if(isTeached)
+        {
+            ingameUI.Show();
+        }
+        else
+        {
+            ShowTeach();
+        }
+
         resumeFlag = true;
+        PlayerController.Instance.OnTeachEntityDied += HideTeach;
     }
     void Update()
     {
@@ -105,5 +117,23 @@ public class UIManager : MonoBehaviour
                 resumeFlag = true;
             }
         }
+    }
+
+    public void ShowVictory()
+    {
+        ingameUI.Hide();
+        victoryUI.Show();
+    }
+    public void ShowTeach()
+    {
+        ingameUI.Hide();
+        teachUI.Show();
+    }
+
+    public void HideTeach()
+    {
+        teachUI.Hide();
+        isTeached = true;
+        ingameUI.Show();
     }
 }
