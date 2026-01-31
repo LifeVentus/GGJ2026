@@ -58,18 +58,21 @@ public class UIManager : MonoBehaviour
     }
     public void ShowDieUI()
     {
+        SoundManager.Instance.StopBGM();
         ingameUI.Hide();
         dieUI.Show();
     }
 
     public void ShowPauseUI()
     {
+        SoundManager.Instance.PauseBGM();
         ingameUI.Hide();
         pauseUI.Show();
     }
 
     public void HidePauseUI()
     {
+        SoundManager.Instance.ResumeBGM();
         ingameUI.Show();
         pauseUI.Hide();
     }
