@@ -1,68 +1,76 @@
 {
   "commonText": [
-    "那个……你好？",
-    "啊，打扰到你了吗？",
-    "诶？发生什么了吗？",
-    "如果不方便就算了。",
-    "我想试试这个，可以吗？",
-    "在呢，在呢。",
-    "我可以过来一下吗？",
-    "是不是有什么事？",
-    "今天好开心啊，交到了新朋友",
-    "不好意思，是我挡路了吗？"
+    "Um… hi?",
+    "Ah—sorry, am I interrupting?",
+    "Huh? Did something happen?",
+    "If now’s not a good time, it’s okay.",
+    "I want to give this a try. Is that alright?",
+    "I’m here, I’m here.",
+    "Mind if I come over for a second?",
+    "Is something going on?",
+    "Today’s been great—I made a new friend!",
+    "Sorry… am I in your way?"
   ],
   "weirdText": [
-    "啊？这就急了?",
-    "笑死，这也能破防？",
-    "你确定要跟我较这个劲？",
-    "不会吧，不会吧。",
-    "我还以为多大的事呢",
-    "就这就这就这",
-    "你搁这搁这呢"
+    "What, you’re mad already?",
+    "LMAO, this is what broke you?",
+    "You sure you wanna argue about *this*?",
+    "No way. No way.",
+    "And here I thought it was something serious.",
+    "That’s it? That’s all?",
+    "Bro, what are you even doing?"
   ],
   "abstractText": [
-    "尊嘟假嘟",
-    "绝绝子跺jiojio",
-    "意大利面拌42号混凝土真不错",
-    "Man, What can I Say, Manba out!",
-    "蚌埠住了",
-    "鸡你太美",
-    "耗子尾汁",
-    "家人们谁懂啊",
-    "何意味？"
+    "For real or nah?",
+    "Absolutely cracked.",
+    "Spaghetti mixed with concrete—chef’s kiss.",
+    "Man, what can I say? Mamba out.",
+    "I literally can’t handle this.",
+    "You’re kidding me.",
+    "Watch yourself.",
+    "Guys… you won’t believe this.",
+    "What does that even mean?"
   ],
   "subtitlePairs": [
     {
       "key": "start1",
-      "value": "欢迎来到互联网"
+      "value": "Welcome to the internet."
     },
     {
-      "key":"start2",
-      "value":"你看起来一无所知,那有一个面具,去得到它"
+      "key": "start2",
+      "value": "You look clueless.There’s a mask over there—go get it."
     },
     {
-      "key":"startgame",
-      "value":"恭喜你,这就是你在互联网的身份,现在尽情遨游吧"
+      "key": "startgame",
+      "value": "Congrats.This is who you are on the internet now.Go explore."
     },
     {
-      "key":"task",
-      "value":"尝试与他人接触,注意避开不怀好意的家伙"
+      "key": "task1",
+      "value": "Try interacting with others."
     },
     {
-      "key":"firstHurt",
-      "value":"互联网总有坏家伙,你还太弱小,尽量远离吧"
+      "key": "task2",
+      "value": "And stay away from those with bad intentions."
     },
     {
-      "key":"levelup1",
-      "value":"恭喜你,你在互联网上经历了许多,现在去了解更多人吧"
+      "key": "firstHurt1",
+      "value": "The internet has its share of bad people."
     },
     {
-      "key":"levelup2",
-      "value":"现在你已经完全看穿互联网,还有什么能拦住你？"
+      "key": "firstHurt2",
+      "value": "You’re still too weak—keep your distance."
+    },
+    {
+      "key": "levelup1",
+      "value": "You’ve seen a lot online. Now, go meet more people."
+    },
+    {
+      "key": "levelup2",
+      "value": "What could possibly stop you?"
     },
     {
       "key": "end",
-      "value": "互联网真美妙,可是你还记得最初的样子吗"
+      "value": "The internet is beautiful. But do you remember how it all began?"
     }
   ]
 }

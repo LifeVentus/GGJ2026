@@ -19,7 +19,7 @@ public class SubtitleUI : MonoBehaviour
     public AudioClip typeSound;
     public AudioSource audioSource;
     public float typeSpeed = 0.2f;
-    public float durationTime = 2f;
+    public float durationTime = 3f;
     private string fullText;
     private int currentIndex = 0;
     void Start()
@@ -29,6 +29,19 @@ public class SubtitleUI : MonoBehaviour
         currentIndex = 0;
     }
 
+
+    public void FirstHurtSubtitle()
+    {
+        StartCoroutine(FirstHurtCoroutine());
+    }
+    public IEnumerator FirstHurtCoroutine()
+    {
+        string text1 = SubtitleManager.Instance.subtitleText["firstHurt1"];
+        string text2 = SubtitleManager.Instance.subtitleText["firstHurt2"];
+        TypeSubtitle(text1);
+        yield return new WaitForSeconds(3f);
+        TypeSubtitle(text2);
+    }
     public void StartGameSubtile()
     {
         StartCoroutine(StartGameCoroutine());
@@ -36,10 +49,13 @@ public class SubtitleUI : MonoBehaviour
     public IEnumerator StartGameCoroutine()
     {
         string text1 = SubtitleManager.Instance.subtitleText["startgame"];
-        string text2 = SubtitleManager.Instance.subtitleText["task"];
+        string text2 = SubtitleManager.Instance.subtitleText["task1"];
+        string text3 = SubtitleManager.Instance.subtitleText["task2"];
         TypeSubtitle(text1);
         yield return new WaitForSeconds(3f);
         TypeSubtitle(text2);
+        yield return new WaitForSeconds(3f);
+        TypeSubtitle(text3);
     }
     public void TypeStartSubtitle()
     {

@@ -53,6 +53,7 @@ public abstract class BaseEntity : MonoBehaviour, IController
     {
         Init();
         player.OnLevelUpEvent += ChangeEntityColor;
+        player.OnVictory += Freeze;
     }
     protected virtual void Update()
     {
@@ -61,6 +62,10 @@ public abstract class BaseEntity : MonoBehaviour, IController
         DestroyOutOfDistance();
     }
 
+    public void Freeze()
+    {
+        currentSpeed = 0;
+    }
     public virtual void ChangeEntityColor()
     {
         if(spriteRenderer.color == specialColor)

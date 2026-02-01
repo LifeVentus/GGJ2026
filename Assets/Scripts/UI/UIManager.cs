@@ -123,6 +123,7 @@ public class UIManager : MonoBehaviour
 
     public void ShowVictory()
     {
+        SoundManager.Instance.PauseBGM();
         StartCoroutine(VictoryCoroutine());
     }
 
@@ -132,7 +133,7 @@ public class UIManager : MonoBehaviour
         victoryUI.Show();
 
         subtitleUI.TypeSubtitle(SubtitleManager.Instance.subtitleText["end"]);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
         subtitleUI.gameObject.SetActive(false);
     }
     public void ShowTeach()

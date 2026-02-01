@@ -18,8 +18,6 @@ public class PlayerController : MonoBehaviour, IController
             return instance;
         }
     }
-
-
     [Header("移动参数")]
     [SerializeField] private float moveSpeed = 5.0f;
     [SerializeField] private float dashSpeed = 8.0f;
@@ -57,11 +55,19 @@ public class PlayerController : MonoBehaviour, IController
     private int lastLevel;
     public event Action OnLevelUpEvent;
     public event Action OnTeachEntityDied;
+    public event Action OnVictory;
 
     [Header("字幕打印")]
-    private int firstLevelUp = 1; 
+    // private int firstLevelUp = 1; 
     private int firstHurt = 1;
 
+    // test
+    public void Test()
+    {
+        OnVictory?.Invoke();
+        UIManager.Instance.ShowVictory();
+            SoundManager.Instance.PlayVictoryAudio();
+    }
     void Awake()
     {
         if(instance != null && instance != this)
@@ -124,6 +130,7 @@ public class PlayerController : MonoBehaviour, IController
         }
         if(playerDateModel.CurrentLevel == playerDateModel.MaxLevel && playerDateModel.CurrentEXPValue == playerDateModel.MaxEXP)
         {
+            OnVictory?.Invoke();
             UIManager.Instance.ShowVictory();
             SoundManager.Instance.PlayVictoryAudio();
         }
@@ -200,7 +207,7 @@ public class PlayerController : MonoBehaviour, IController
 
         if(firstHurt == 1)
         {
-            UIManager.Instance.subtitleUI.TypeSubtitle(SubtitleManager.Instance.subtitleText["firstHurt"]);
+            UIManager.Instance.subtitleUI.FirstHurtSubtitle();
             firstHurt--;
         }
         SoundManager.Instance.PlayGetHurtAudio();
