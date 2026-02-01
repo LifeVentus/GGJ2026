@@ -66,7 +66,10 @@ public class PlayerController : MonoBehaviour, IController
     {
         OnVictory?.Invoke();
         UIManager.Instance.ShowVictory();
-            SoundManager.Instance.PlayVictoryAudio();
+        SoundManager.Instance.PlayVictoryAudio();
+        currentSpeed = 0;
+        rb.velocity = Vector2.zero;
+        gameObject.GetComponent<Collider2D>().enabled = false;
     }
     void Awake()
     {
@@ -133,6 +136,9 @@ public class PlayerController : MonoBehaviour, IController
             OnVictory?.Invoke();
             UIManager.Instance.ShowVictory();
             SoundManager.Instance.PlayVictoryAudio();
+            currentSpeed = 0;
+            rb.velocity = Vector2.zero;
+            gameObject.GetComponent<Collider2D>().enabled = false;
         }
     }
 
