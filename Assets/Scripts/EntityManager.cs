@@ -1,10 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using QFramework;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class EntityManager : MonoBehaviour
+[System.Serializable]
+public class EntityRatio
+{
+    public List<float> entityRatio = new List<float>();
+}
+public class EntityManager : MonoBehaviour, IController
 {
     private static EntityManager instance;
     public static EntityManager Instance
@@ -21,8 +27,10 @@ public class EntityManager : MonoBehaviour
     [Header("参数设置")]
     [SerializeField] private List<BaseEntity> entityList;
     [Range(0, 100)]
-    [SerializeField] private List<float> entityRatio;
-    [SerializeField] private int entityMaxAmount;
+    [SerializeField] private List<float> currentEntityRatio;
+    [SerializeField] private List<int> entityMaxAmoutLsit;
+    [SerializeField] private List<EntityRatio> entityRatioList = new List<EntityRatio>();
+    [SerializeField] private int currentEntityMaxAmount;
     [SerializeField] private float generateMinRadius;
     [SerializeField] private float generateMaxRadius;
     [SerializeField] private bool isGaming;
@@ -31,6 +39,8 @@ public class EntityManager : MonoBehaviour
 
     private float coolTimeCounter;
     private PlayerController player;
+    private PlayerDataModel playerDataModel;
+
     void Awake()
     {
         if(instance != null && instance != this)
@@ -44,16 +54,16 @@ public class EntityManager : MonoBehaviour
         }
 
         // 初始化对象池
-        for(int i = 0; i < entityList.Count; i++)
-        {
-            int entityCount = (int)(entityMaxAmount * (entityRatio[i] / 100));
-            CreatePool(entityList[i], entityCount);
-        }
+        InitEntityPool();
     }
     void Start()
     {
+        currentEntityMaxAmount = entityMaxAmoutLsit[0];
         player = PlayerController.Instance;
         player.OnTeachEntityDied += StartGenerateEntity;
+        player.OnLevelUpEvent += UpdateParameters;
+        playerDataModel = this.GetModel<PlayerDataModel>();
+
     }
 
     // Update is called once per frame
@@ -64,6 +74,40 @@ public class EntityManager : MonoBehaviour
             GenerateEntity();
         }
     }
+
+    public void UpdateParameters()
+    {
+        currentEntityMaxAmount = entityMaxAmoutLsit[playerDataModel.CurrentLevel - 1];
+        UpDateEntityPool();
+    }
+
+    public void InitEntityPool()
+    {
+        currentEntityRatio = entityRatioList[0].entityRatio;
+        // 初始化对象池
+        for (int i = 0; i < entityList.Count; i++)
+        {
+            int escapeEntityCount = (int)(currentEntityMaxAmount * (currentEntityRatio[i] / 100));
+            CreatePool(entityList[i], escapeEntityCount);
+        }
+        
+
+    }
+
+    public void UpDateEntityPool()
+    {
+        currentEntityRatio = entityRatioList[playerDataModel.CurrentLevel - 1].entityRatio;
+        // 初始化对象池
+        for (int i = 0; i < entityList.Count; i++)
+        {
+            ClearPool(entityList[i]);
+            int escapeEntityCount = (int)(currentEntityMaxAmount * (currentEntityRatio[i] / 100));
+            CreatePool(entityList[i], escapeEntityCount);
+        }
+
+
+    }
+
 
     public void StartGenerateEntity()
     {
@@ -81,7 +125,7 @@ public class EntityManager : MonoBehaviour
         {
             string key = entityList[i].name;
             int activeCount = GetPoolActiveCount(key);
-            int entityCount = (int)(entityMaxAmount * (entityRatio[i] / 100));
+            int entityCount = (int)(currentEntityMaxAmount * (currentEntityRatio[i] / 100));
             if(activeCount < entityCount)
             {
                 BaseEntity entity = Get(entityList[i]);
@@ -110,6 +154,12 @@ public class EntityManager : MonoBehaviour
         }
     }
 
+    public void ClearPool<T>(T prefab) where T : MonoBehaviour
+    {
+        string key = prefab.name;
+        pools.Remove(key);
+    }
+
     public T Get<T>(T prefab) where T : MonoBehaviour
     {
         string key = prefab.name;
@@ -129,5 +179,10 @@ public class EntityManager : MonoBehaviour
             ObjectPool<T> pool = (ObjectPool<T>)pools[key];
             pool.Return(obj);
         }
+    }
+
+    public IArchitecture GetArchitecture()
+    {
+        return PlayerData.Interface;
     }
 }
