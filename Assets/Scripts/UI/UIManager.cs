@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private VictoryUI victoryUI;
     [SerializeField] private TeachUI teachUI;
     public bool isTeached;
+    public bool dieUIenabled;
 
     void Awake()
     {
@@ -48,17 +49,21 @@ public class UIManager : MonoBehaviour
             subtitleUI.TypeStartSubtitle();
             ShowTeach();
         }
-
+        dieUIenabled = false;
         resumeFlag = true;
         PlayerController.Instance.OnTeachEntityDied += HideTeach;
 
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (!dieUIenabled)
         {
-            ToggleByEsc();
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ToggleByEsc();
+            }   
         }
+        
     }
 
     public void ShowRandomSubtitle(EntityType entityType)
@@ -72,6 +77,7 @@ public class UIManager : MonoBehaviour
     }
     public void ShowDieUI()
     {
+        dieUIenabled = true;
         SoundManager.Instance.StopBGM();
         ingameUI.Hide();
         dieUI.Show();
